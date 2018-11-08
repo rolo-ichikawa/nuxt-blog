@@ -1,5 +1,5 @@
 <template>
-  <section id="detail" class="container">
+  <section class="container">
     <div>
       <nuxt-link to="/articles/" class="button--grey">ブログ一覧へ戻る</nuxt-link>
       <div class="title">
@@ -31,11 +31,13 @@ export default {
   asyncData({ env, params }) {
     return client
       .getEntries({
-        content_type: env.CTF_BLOG_ID,
+        content_type: env.CTF_BLOG_POST_TYPE_ID,
       })
       .then((entries) => {
         const posts = entries.items;
-        const current = posts.filter(item => item.fields._slug == params._slug);
+        const current = posts.filter(function(item) {
+          return item.fields.slug === params.slug;
+        });
         return {
           allPosts: posts,
           currentPost: current[0],
@@ -45,7 +47,41 @@ export default {
   },
 };
 </script>
-
 <style lang="css" scoped>
-@import "~/assets/style.css";
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.container {
+  width: 960px;
+  min-height: 100vh;
+  margin: 50px auto;
+  text-align: left;
+  display: block;
+}
+.title {
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.title p {
+  width: 20%;
+  font-size: 16px;
+  text-align: right;
+}
+h1 {
+  width: 80%;
+  font-size: 30px;
+}
+.button--grey {
+  width: auto;
+  margin-bottom: 30px;
+}
+.text {
+  font-size: 16px;
+  line-height: 1.8;
+}
 </style>
